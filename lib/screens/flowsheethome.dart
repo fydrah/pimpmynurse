@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:pimpmynurse/widgets/flowsheet.dart';
 
-class FlowsheetHome extends StatelessWidget {
-  FlowsheetHome({super.key});
+class FlowsheetHome extends StatefulWidget {
+  const FlowsheetHome({super.key});
+
+  @override
+  State<FlowsheetHome> createState() => _FlowsheetHomeState();
+}
+
+class _FlowsheetHomeState extends State<FlowsheetHome> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(appBar: appBar(context), body: current);
+  }
 
   late Widget current = flowsheetPageContent();
-  List<Flowsheet> flowsheetList = [];
 
   ListView flowsheetPageContent() {
     return ListView.separated(
@@ -18,7 +27,9 @@ class FlowsheetHome extends StatelessWidget {
           child: Center(
               child: TextButton(
             onPressed: () {
-              current = flowsheetList[index];
+              setState(() {
+                current = flowsheetList[index];
+              });
             },
             child: Text(flowsheetList[index].model.date.toString()),
           )),
@@ -45,25 +56,26 @@ class FlowsheetHome extends StatelessWidget {
   List<Widget> get appBarActions => [
         IconButton(
             onPressed: () {
-              current = flowsheetPageContent();
+              setState(() {
+                current = flowsheetPageContent();
+              });
             },
             icon: const Icon(Icons.list)),
         IconButton(
             onPressed: () {
-              current = const Placeholder();
+              setState(() {
+                current = const Placeholder();
+              });
             },
             icon: const Icon(Icons.settings)),
         IconButton(
             onPressed: () {
-              var newFlowsheet = Flowsheet();
-              flowsheetList.add(newFlowsheet);
-              current = newFlowsheet;
+              setState(() {
+                var newFlowsheet = Flowsheet();
+                flowsheetList.add(newFlowsheet);
+                current = newFlowsheet;
+              });
             },
             icon: const Icon(Icons.add_circle)),
       ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(appBar: appBar(context), body: current);
-  }
 }

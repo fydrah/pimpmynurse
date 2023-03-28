@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:pimpmynurse/screens/flowsheet.dart';
+import 'package:pimpmynurse/screens/flowsheethome.dart';
 
-class Home extends StatelessWidget {
-  Home({super.key});
+class Home extends StatefulWidget {
+  const Home({super.key});
 
-  late Widget current = homePageContent();
-  List<Map<String, dynamic>> pimps = [
-    {"name": "Flowsheet", "page": FlowsheetHome()},
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(appBar: appBar(), body: _current);
+  }
+
+  late Widget _current = homePageContent();
+  late List<Map<String, dynamic>> _pimps = [
+    {"name": "Flowsheet", "page": const FlowsheetHome()},
   ];
 
   void navigate(BuildContext context, Widget page) {
@@ -18,7 +28,7 @@ class Home extends StatelessWidget {
   Widget homePageContent() {
     return ListView.separated(
       padding: const EdgeInsets.all(8),
-      itemCount: pimps.length,
+      itemCount: _pimps.length,
       itemBuilder: (BuildContext context, int index) {
         return Container(
           height: 50,
@@ -26,9 +36,11 @@ class Home extends StatelessWidget {
           child: Center(
               child: TextButton(
             onPressed: () {
-              navigate(context, pimps[index]['page']);
+              setState(() {
+                navigate(context, _pimps[index]['page']);
+              });
             },
-            child: Text(pimps[index]['name']),
+            child: Text(_pimps[index]['name']),
           )),
         );
       },
@@ -47,18 +59,17 @@ class Home extends StatelessWidget {
   List<Widget> get appBarActions => [
         IconButton(
             onPressed: () {
-              current = homePageContent();
+              setState(() {
+                _current = homePageContent();
+              });
             },
             icon: const Icon(Icons.home)),
         IconButton(
             onPressed: () {
-              current = const Placeholder();
+              setState(() {
+                _current = const Placeholder();
+              });
             },
             icon: const Icon(Icons.info_rounded)),
       ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(appBar: appBar(), body: current);
-  }
 }

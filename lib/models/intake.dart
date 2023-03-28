@@ -1,7 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:pimpmynurse/models/total.dart';
 import 'package:pimpmynurse/models/medication.dart';
 
-class IntakeModel {
+class IntakeModel extends ChangeNotifier {
   late int hour;
   List<MedicationModel> medications = [];
   late TotalModel totalPO;
