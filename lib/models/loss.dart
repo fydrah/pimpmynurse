@@ -1,0 +1,3 @@
+class LossModel {
+  LossModel();
+}
