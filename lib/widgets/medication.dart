@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:pimpmynurse/models/medication.dart';
 
 class Medication extends StatelessWidget {
-  final MedicationModel model = MedicationModel();
+  final MedicationModel model;
 
-  Medication({super.key});
+  const Medication({super.key, required this.model});
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    return const Placeholder();
   }
 }

@@ -1,10 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:pimpmynurse/models/flowsheet.dart';
+import 'package:pimpmynurse/widgets/intakes.dart';
+import 'package:pimpmynurse/widgets/outputs.dart';
 
-class Flowsheet extends StatelessWidget {
-  final FlowsheetModel model = FlowsheetModel();
+class Flowsheet extends StatefulWidget {
+  final FlowsheetModel model;
 
-  Flowsheet({super.key});
+  const Flowsheet({super.key, required this.model});
+
+  @override
+  State<Flowsheet> createState() => _FlowsheetState();
+}
+
+class _FlowsheetState extends State<Flowsheet> {
+  // @override
+  // void initState() {
+  //   _openBox().then((value) => setState(() {}));
+  //   super.initState();
+  // }
+
+  // @override
+  // void dispose() {
+  //   Hive.box('${widget.model.key}_intakes').close();
+  //   Hive.box('${widget.model.key}_outputs').close();
+  //   super.dispose();
+  // }
+
+  // Future _openBox() async {
+  //   await Hive.openBox<IntakeModel>('${widget.model.key}_intakes');
+  //   await Hive.openBox<IntakeModel>('${widget.model.key}_outputs');
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +37,7 @@ class Flowsheet extends StatelessWidget {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("CHANGEME"),
+          toolbarHeight: 0.0,
           automaticallyImplyLeading: false,
           bottom: const TabBar(
             tabs: [
@@ -22,10 +47,10 @@ class Flowsheet extends StatelessWidget {
             ],
           ),
         ),
-        body: const TabBarView(
+        body: TabBarView(
           children: [
-            Placeholder(),
-            Placeholder(),
+            Intakes(flowsheet: widget.model),
+            Outputs(flowsheet: widget.model),
             Placeholder(),
           ],
         ),
