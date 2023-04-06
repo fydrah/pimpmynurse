@@ -1,38 +1,35 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'medication.dart';
+part of 'loss_type.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class MedicationModelAdapter extends TypeAdapter<MedicationModel> {
+class LossTypeModelAdapter extends TypeAdapter<LossTypeModel> {
   @override
-  final int typeId = 4;
+  final int typeId = 3;
 
   @override
-  MedicationModel read(BinaryReader reader) {
+  LossTypeModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return MedicationModel(
+    return LossTypeModel(
       id: fields[0] as String,
-      solutionId: fields[1] as String,
-      quantityMl: fields[2] as int,
+      name: fields[1] as String,
     );
   }
 
   @override
-  void write(BinaryWriter writer, MedicationModel obj) {
+  void write(BinaryWriter writer, LossTypeModel obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(2)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.solutionId)
-      ..writeByte(2)
-      ..write(obj.quantityMl);
+      ..write(obj.name);
   }
 
   @override
@@ -41,7 +38,7 @@ class MedicationModelAdapter extends TypeAdapter<MedicationModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is MedicationModelAdapter &&
+      other is LossTypeModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

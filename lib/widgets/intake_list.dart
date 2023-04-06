@@ -1,29 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:pimpmynurse/models/flowsheet.dart';
-import 'package:pimpmynurse/models/intake.dart';
-import 'package:pimpmynurse/models/output.dart';
-import 'package:pimpmynurse/widgets/output.dart';
+import 'package:pimpmynurse/widgets/intake.dart';
 
-class Outputs extends StatefulWidget {
+class IntakeList extends StatelessWidget {
   final FlowsheetModel flowsheet;
-  const Outputs({super.key, required this.flowsheet});
+  final dynamic newIntake;
 
-  @override
-  State<Outputs> createState() => _OutputsState();
-}
-
-class _OutputsState extends State<Outputs> {
-  Box<OutputModel> box = Hive.box('outputs');
-
-  void _newOutput() {
-    var newOutput = OutputModel.create(
-      hour:
-          widget.flowsheet.shiftStartingHour + widget.flowsheet.outputs.length,
-    );
-    box.add(newOutput);
-    widget.flowsheet.outputs.add(newOutput);
-  }
+  const IntakeList({super.key, required this.flowsheet, this.newIntake});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +20,7 @@ class _OutputsState extends State<Outputs> {
             mainAxisSpacing: 10,
             crossAxisCount: 3,
             children: <Widget>[
-              for (var output in widget.flowsheet.outputs)
+              for (var intake in flowsheet.intakes)
                 Card(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
@@ -46,9 +29,10 @@ class _OutputsState extends State<Outputs> {
                     margin: const EdgeInsets.symmetric(
                         horizontal: 10.0, vertical: 6.0),
                     child: TextButton(
-                        child: Text(output.toString()),
+                        child: Text(intake.hourName()),
                         onPressed: () {
-                          // TODO
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => Intake(model: intake)));
                         })),
               Card(
                   shape: RoundedRectangleBorder(
@@ -60,9 +44,7 @@ class _OutputsState extends State<Outputs> {
                   child: IconButton(
                       icon: const Icon(Icons.add),
                       onPressed: () {
-                        setState(() {
-                          _newOutput();
-                        });
+                        newIntake();
                       })),
             ],
           ),

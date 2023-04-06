@@ -1,11 +1,15 @@
 import 'package:hive/hive.dart';
 import 'package:pimpmynurse/models/output.dart';
 import 'package:pimpmynurse/models/intake.dart';
+import 'package:pimpmynurse/utils/boxes.dart';
+import 'package:pimpmynurse/models/shift.dart';
+import 'package:uuid/uuid.dart';
 part 'flowsheet.g.dart';
 
 @HiveType(typeId: 0)
 class FlowsheetModel extends HiveObject {
   FlowsheetModel({
+    required this.id,
     required this.name,
     required this.shift,
     required this.shiftStartingHour,
@@ -15,59 +19,93 @@ class FlowsheetModel extends HiveObject {
   });
 
   @HiveField(0)
-  late String name;
+  final String id;
   @HiveField(1)
-  final String shift;
-
-  // List<TotalModel> intakeTotals = [];
-  // List<TotalModel> outputTotals = [];
-  // int balance = 0;
-
+  late String name;
   @HiveField(2)
-  DateTime createdAt;
+  final Shift shift;
+
   @HiveField(3)
-  int shiftStartingHour;
+  DateTime createdAt;
   @HiveField(4)
-  HiveList<IntakeModel> intakes;
+  int shiftStartingHour;
   @HiveField(5)
+  HiveList<IntakeModel> intakes;
+  @HiveField(6)
   HiveList<OutputModel> outputs;
 
   factory FlowsheetModel.create({
     required String name,
-    required String shift,
+    required Shift shift,
   }) {
     int shiftStartingHour;
     switch (shift) {
-      case "D":
+      case Shift.day:
         shiftStartingHour = 8;
         break;
-      case "E":
+      case Shift.evening:
         shiftStartingHour = 16;
         break;
-      case "N":
+      case Shift.night:
         shiftStartingHour = 0;
         break;
       default:
         throw ShiftTypeException(
             "Shift type $shift does not exists ('D','E', 'N')");
     }
-    return FlowsheetModel(
+
+    var newFlowsheet = FlowsheetModel(
+        id: const Uuid().v1(),
         name: name,
         shift: shift,
         shiftStartingHour: shiftStartingHour,
         createdAt: DateTime.now(),
-        intakes: HiveList(Hive.box<IntakeModel>('intakes')),
-        outputs: HiveList(Hive.box<OutputModel>('outputs')));
+        intakes: HiveList(AppBoxes.intakes),
+        outputs: HiveList(AppBoxes.outputs));
+    AppBoxes.flowsheets.put(newFlowsheet.id, newFlowsheet);
+    return newFlowsheet;
+  }
+
+  void newIntake() {
+    var intake = IntakeModel.create(
+      hour: shiftStartingHour + intakes.length,
+    );
+    AppBoxes.intakes.put(intake.id, intake);
+    addIntake(intake);
+  }
+
+  void addIntake(IntakeModel intake) {
+    intakes.add(intake);
+    save();
+  }
+
+  void removeIntake(IntakeModel intake) {
+    intakes.remove(intake);
+    save();
+  }
+
+  void newOutput() {
+    var output = OutputModel.create(
+      hour: shiftStartingHour + outputs.length,
+    );
+    AppBoxes.outputs.put(output.id, output);
+    addOutput(output);
+  }
+
+  void addOutput(OutputModel output) {
+    outputs.add(output);
+    save();
+  }
+
+  void removeOutput(OutputModel output) {
+    outputs.remove(output);
+    save();
   }
 
   @override
-  String toString() {
-    return name;
+  Future<void> delete() {
+    intakes.deleteAllFromHive();
+    outputs.deleteAllFromHive();
+    return super.delete();
   }
-}
-
-class ShiftTypeException implements Exception {
-  String msg;
-
-  ShiftTypeException(this.msg);
 }

@@ -8,13 +8,20 @@ environment:
 
 dependencies:
   cupertino_icons: ^1.0.5
+  dropdown_search: ^5.0.6
+  dropdown_selection: ^2.0.3
   english_words: ^4.0.0
+  flex_color_scheme: ^7.0.0
   flutter:
     sdk: flutter
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   intl: ^0.18.0
+  number_text_input_formatter: ^1.0.0+3
   provider: ^6.0.0
+  scrollable_table_view: ^1.0.1
+  shared_preferences: ^2.1.0
+  uuid: ^3.0.7
 
 dev_dependencies:
   flutter_test:

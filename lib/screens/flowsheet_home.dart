@@ -4,7 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:pimpmynurse/models/flowsheet.dart';
+import 'package:pimpmynurse/models/solution.dart';
+import 'package:pimpmynurse/utils/boxes.dart';
+import 'package:pimpmynurse/models/shift.dart';
 import 'package:pimpmynurse/widgets/flowsheet.dart';
+import 'package:pimpmynurse/widgets/settings.dart';
 
 class FlowsheetHome extends StatefulWidget {
   const FlowsheetHome({super.key});
@@ -17,13 +21,8 @@ class _FlowsheetHomeState extends State<FlowsheetHome> {
   late Widget current = homeBody();
   bool isHome = true;
   String title = "Flowsheets";
-  Box<FlowsheetModel> box = Hive.box<FlowsheetModel>('flowsheets');
+  Box<FlowsheetModel> box = AppBoxes.flowsheets;
   final _textEditController = TextEditingController();
-
-  void _newFlowsheet(String shift, String name) {
-    FlowsheetModel newFs = FlowsheetModel.create(name: name, shift: shift);
-    box.add(newFs);
-  }
 
   List<FlowsheetModel> _flowsheetByDate() {
     var items = box.values.toList();
@@ -55,6 +54,7 @@ class _FlowsheetHomeState extends State<FlowsheetHome> {
         IconButton(
             onPressed: () {
               setState(() {
+                title = 'Flowsheets';
                 current = homeBody();
               });
             },
@@ -62,41 +62,28 @@ class _FlowsheetHomeState extends State<FlowsheetHome> {
         IconButton(
             onPressed: () {
               setState(() {
-                current = const Placeholder();
+                title = 'Settings';
+                current = const Settings();
               });
             },
             icon: const Icon(Icons.settings)),
         IconButton(
             onPressed: () async {
-              var val = await dialogCreate();
-              if (val != null) {
-                setState(() {
-                  _newFlowsheet(val, _textEditController.text);
-                  current = homeBody();
-                });
-              }
+              Shift val = await dialogCreate();
+              setState(() {
+                FlowsheetModel.create(
+                    name: _textEditController.text, shift: val);
+                current = homeBody();
+              });
             },
             icon: const Icon(Icons.add_circle)),
       ],
     );
   }
 
-  Icon _shift2Icon(String shift) {
-    switch (shift) {
-      case 'D':
-        return const Icon(Icons.sunny);
-      case 'E':
-        return const Icon(CupertinoIcons.sun_dust_fill);
-      case 'N':
-        return const Icon(Icons.bedtime);
-      default:
-        return const Icon(Icons.question_mark);
-    }
-  }
-
   Future dialogCreate() {
     _textEditController.text = WordPair.random(safeOnly: true).asPascalCase;
-    return showDialog<String>(
+    return showDialog<Shift>(
         context: context,
         builder: (BuildContext context) => AlertDialog(
               title: const Text('Shift type'),
@@ -116,22 +103,22 @@ class _FlowsheetHomeState extends State<FlowsheetHome> {
                   ),
                 ),
                 ElevatedButton(
-                    onPressed: () => Navigator.pop(context, 'D'),
+                    onPressed: () => Navigator.pop(context, Shift.day),
                     child: Row(children: [
-                      _shift2Icon('D'),
-                      const Text('Day'),
+                      Shift.day.icon,
+                      Text(Shift.day.name),
                     ])),
                 ElevatedButton(
-                    onPressed: () => Navigator.pop(context, 'E'),
+                    onPressed: () => Navigator.pop(context, Shift.evening),
                     child: Row(children: [
-                      _shift2Icon('E'),
-                      const Text('Evening'),
+                      Shift.evening.icon,
+                      Text(Shift.evening.name),
                     ])),
                 ElevatedButton(
-                    onPressed: () => Navigator.pop(context, 'N'),
+                    onPressed: () => Navigator.pop(context, Shift.night),
                     child: Row(children: [
-                      _shift2Icon('N'),
-                      const Text('Night'),
+                      Shift.night.icon,
+                      Text(Shift.night.name),
                     ])),
               ],
             ));
@@ -153,12 +140,18 @@ class _FlowsheetHomeState extends State<FlowsheetHome> {
             elevation: 8.0,
             margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
             child: ListTile(
+                onTap: () {
+                  setState(() {
+                    current = Flowsheet(model: currFlowsheet);
+                    isHome = false;
+                    title = currFlowsheet.name;
+                  });
+                },
                 contentPadding:
                     const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
                 ),
-                // tileColor: Colors.lightBlueAccent,
                 leading: Container(
                   padding: const EdgeInsets.only(right: 2.0),
                   decoration: const BoxDecoration(
@@ -166,13 +159,31 @@ class _FlowsheetHomeState extends State<FlowsheetHome> {
                           right:
                               BorderSide(width: 2.0, color: Colors.black38))),
                   child: IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: () {
+                    icon: const Icon(Icons.delete),
+                    onPressed: () async {
+                      bool validated = await showDialog(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                                title: const Text('Confirm deletion?'),
+                                actions: [
+                                  ElevatedButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, false),
+                                      child: const Text('Cancel')),
+                                  ElevatedButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, true),
+                                      child: const Text('Yes')),
+                                ],
+                              ));
+                      if (validated) {
                         setState(() {
                           currFlowsheet.delete();
                           current = homeBody();
                         });
-                      }),
+                      }
+                    },
+                  ),
                 ),
                 title: Text(currFlowsheet.name),
                 subtitle: Row(
@@ -181,23 +192,18 @@ class _FlowsheetHomeState extends State<FlowsheetHome> {
                     Text(
                       DateFormat("yyyy-MM-dd kk:mm")
                           .format(currFlowsheet.createdAt),
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      style: DefaultTextStyle.of(context)
+                          .style
+                          .copyWith(fontWeight: FontWeight.bold),
                     ),
                     const VerticalDivider(),
-                    _shift2Icon(currFlowsheet.shift),
-                    Text(currFlowsheet.shift)
+                    currFlowsheet.shift.icon,
+                    Text(currFlowsheet.shift.shortName)
                   ],
                 ),
-                trailing: IconButton(
-                  padding: const EdgeInsets.all(0.0),
-                  icon: const Icon(Icons.keyboard_arrow_right),
-                  onPressed: () {
-                    setState(() {
-                      current = Flowsheet(model: currFlowsheet);
-                      isHome = false;
-                      title = currFlowsheet.name;
-                    });
-                  },
+                trailing: const Padding(
+                  padding: EdgeInsets.only(right: 16.0),
+                  child: Icon(Icons.keyboard_arrow_right),
                 )));
       },
     );

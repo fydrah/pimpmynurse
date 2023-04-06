@@ -1,38 +1,38 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'medication.dart';
+part of 'solution.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class MedicationModelAdapter extends TypeAdapter<MedicationModel> {
+class SolutionModelAdapter extends TypeAdapter<SolutionModel> {
   @override
-  final int typeId = 4;
+  final int typeId = 6;
 
   @override
-  MedicationModel read(BinaryReader reader) {
+  SolutionModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return MedicationModel(
+    return SolutionModel(
       id: fields[0] as String,
-      solutionId: fields[1] as String,
-      quantityMl: fields[2] as int,
+      medication: fields[1] as String?,
+      solventId: fields[2] as String,
     );
   }
 
   @override
-  void write(BinaryWriter writer, MedicationModel obj) {
+  void write(BinaryWriter writer, SolutionModel obj) {
     writer
       ..writeByte(3)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.solutionId)
+      ..write(obj.medication)
       ..writeByte(2)
-      ..write(obj.quantityMl);
+      ..write(obj.solventId);
   }
 
   @override
@@ -41,7 +41,7 @@ class MedicationModelAdapter extends TypeAdapter<MedicationModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is MedicationModelAdapter &&
+      other is SolutionModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

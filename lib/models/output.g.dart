@@ -8,7 +8,7 @@ part of 'output.dart';
 
 class OutputModelAdapter extends TypeAdapter<OutputModel> {
   @override
-  final int typeId = 4;
+  final int typeId = 5;
 
   @override
   OutputModel read(BinaryReader reader) {
@@ -17,19 +17,22 @@ class OutputModelAdapter extends TypeAdapter<OutputModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return OutputModel(
-      hour: fields[0] as int,
-      medications: (fields[1] as HiveList).castHiveList(),
+      id: fields[0] as String,
+      hour: fields[1] as int,
+      losses: (fields[2] as HiveList).castHiveList(),
     );
   }
 
   @override
   void write(BinaryWriter writer, OutputModel obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(3)
       ..writeByte(0)
-      ..write(obj.hour)
+      ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.medications);
+      ..write(obj.hour)
+      ..writeByte(2)
+      ..write(obj.losses);
   }
 
   @override

@@ -17,18 +17,21 @@ class IntakeModelAdapter extends TypeAdapter<IntakeModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return IntakeModel(
-      hour: fields[0] as int,
-      medications: (fields[1] as HiveList).castHiveList(),
+      id: fields[0] as String,
+      hour: fields[1] as int,
+      medications: (fields[2] as HiveList).castHiveList(),
     );
   }
 
   @override
   void write(BinaryWriter writer, IntakeModel obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(3)
       ..writeByte(0)
-      ..write(obj.hour)
+      ..write(obj.id)
       ..writeByte(1)
+      ..write(obj.hour)
+      ..writeByte(2)
       ..write(obj.medications);
   }
 

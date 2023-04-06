@@ -17,30 +17,33 @@ class FlowsheetModelAdapter extends TypeAdapter<FlowsheetModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return FlowsheetModel(
-      name: fields[0] as String,
-      shift: fields[1] as String,
-      shiftStartingHour: fields[3] as int,
-      createdAt: fields[2] as DateTime,
-      intakes: (fields[4] as HiveList).castHiveList(),
-      outputs: (fields[5] as HiveList).castHiveList(),
+      id: fields[0] as String,
+      name: fields[1] as String,
+      shift: fields[2] as dynamic,
+      shiftStartingHour: fields[4] as int,
+      createdAt: fields[3] as DateTime,
+      intakes: (fields[5] as HiveList).castHiveList(),
+      outputs: (fields[6] as HiveList).castHiveList(),
     );
   }
 
   @override
   void write(BinaryWriter writer, FlowsheetModel obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
-      ..write(obj.name)
+      ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.shift)
+      ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.createdAt)
+      ..write(obj.shift)
       ..writeByte(3)
-      ..write(obj.shiftStartingHour)
+      ..write(obj.createdAt)
       ..writeByte(4)
-      ..write(obj.intakes)
+      ..write(obj.shiftStartingHour)
       ..writeByte(5)
+      ..write(obj.intakes)
+      ..writeByte(6)
       ..write(obj.outputs);
   }
 

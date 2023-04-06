@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:pimpmynurse/models/loss.dart';
 
 class Loss extends StatelessWidget {
-  final LossModel model = LossModel();
+  final LossModel model;
 
-  Loss({super.key});
+  const Loss({super.key, required this.model});
 
   @override
   Widget build(BuildContext context) {
