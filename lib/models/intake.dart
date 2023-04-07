@@ -35,6 +35,20 @@ class IntakeModel extends HiveObject {
     return newIntake;
   }
 
+  factory IntakeModel.copy(IntakeModel intake, {int? hour}) {
+    var newIntake = IntakeModel(
+        id: const Uuid().v1(),
+        hour: hour ?? intake.hour,
+        medications: HiveList(AppBoxes.medications));
+
+    AppBoxes.intakes.put(newIntake.id, newIntake);
+    for (var medic in intake.medications) {
+      newIntake.add(MedicationModel.create(
+          solution: medic.getSolution(), quantityMl: medic.quantityMl));
+    }
+    return newIntake;
+  }
+
   String hourName() => '${hour}h';
 
   void add(MedicationModel medication) {
@@ -55,9 +69,15 @@ class IntakeModel extends HiveObject {
     return medications.map((medic) => medic.getSolution().getSolvent()).toSet();
   }
 
-  int sumBySolvent(SolventModel solvent) {
+  int sumBy(SolventModel solvent) {
     return medications
         .where((medic) => medic.getSolution().getSolvent() == solvent)
+        .map((medic) => medic.quantityMl)
+        .fold<int>(0, (prev, next) => prev + next);
+  }
+
+  int sumAll() {
+    return medications
         .map((medic) => medic.quantityMl)
         .fold<int>(0, (prev, next) => prev + next);
   }

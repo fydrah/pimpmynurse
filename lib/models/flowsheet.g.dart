@@ -19,7 +19,7 @@ class FlowsheetModelAdapter extends TypeAdapter<FlowsheetModel> {
     return FlowsheetModel(
       id: fields[0] as String,
       name: fields[1] as String,
-      shift: fields[2] as dynamic,
+      shift: fields[2] as Shift,
       shiftStartingHour: fields[4] as int,
       createdAt: fields[3] as DateTime,
       intakes: (fields[5] as HiveList).castHiveList(),

@@ -24,34 +24,19 @@ class _OutputState extends State<Output> {
     return Scaffold(
         bottomNavigationBar: BottomAppBar(
             height: 50.0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                  child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Close')),
-                ),
-                Padding(
-                    padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                    child: Text(widget.model.hourName())),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                  child: ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          widget.model.addLoss(LossModel.create(
-                              lossType: AppBoxes.lossTypes.values.first,
-                              quantityMl: 0));
-                        });
-                      },
-                      child: const Icon(Icons.add_circle)),
-                )
-              ],
-            )),
+            child: Center(
+                child: Padding(
+              padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+              child: ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      widget.model.addLoss(LossModel.create(
+                          lossType: AppBoxes.lossTypes.values.first,
+                          quantityMl: 0));
+                    });
+                  },
+                  child: const Icon(Icons.add_circle)),
+            ))),
         body: ListView(children: [
           table(context),
         ]));
@@ -80,7 +65,7 @@ class _OutputState extends State<Output> {
               Text("Total ${type.name}",
                   style: const TextStyle(fontWeight: FontWeight.bold)),
             ),
-            DataCell(Text(widget.model.sumByLossType(type).toString())),
+            DataCell(Text(widget.model.sumBy(type).toString())),
           ])
       ],
     );

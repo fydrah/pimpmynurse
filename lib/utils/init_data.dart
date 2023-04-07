@@ -9,6 +9,8 @@ const List<String> _defaultSolvents = [
   'D5W 1/2NS',
   'D5W NS',
   'D10W',
+  'H₂O',
+  'FEEDS',
   'LIPID',
   'RL',
 ];
@@ -26,8 +28,14 @@ const Map<String, String> _defaultSolutions = {
 };
 
 const List<String> _defaultLossTypes = [
+  'AFR',
+  'CT',
+  'JP',
+  'NG/OG',
+  'Other',
+  'Pigtail',
+  'RT',
   'Urine',
-  'Water',
 ];
 
 void initSolventsAndSolutions() {

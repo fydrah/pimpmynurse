@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:dropdown_search/dropdown_search.dart';
-import 'package:hive/hive.dart';
 import 'package:number_text_input_formatter/number_text_input_formatter.dart';
 import 'package:pimpmynurse/models/intake.dart';
 import 'package:pimpmynurse/models/medication.dart';
@@ -10,9 +8,8 @@ import 'package:pimpmynurse/utils/boxes.dart';
 
 class Intake extends StatefulWidget {
   final IntakeModel model;
-  final dynamic setCurrent;
 
-  const Intake({super.key, required this.model, this.setCurrent});
+  const Intake({super.key, required this.model});
 
   @override
   State<Intake> createState() => _IntakeState();
@@ -24,34 +21,19 @@ class _IntakeState extends State<Intake> {
     return Scaffold(
         bottomNavigationBar: BottomAppBar(
             height: 50.0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                  child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Close')),
-                ),
-                Padding(
-                    padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                    child: Text(widget.model.hourName())),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                  child: ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          widget.model.add(MedicationModel.create(
-                              solution: AppBoxes.solutions.values.first,
-                              quantityMl: 0));
-                        });
-                      },
-                      child: const Icon(Icons.add_circle)),
-                )
-              ],
-            )),
+            child: Center(
+                child: Padding(
+              padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+              child: ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      widget.model.add(MedicationModel.create(
+                          solution: AppBoxes.solutions.values.first,
+                          quantityMl: 0));
+                    });
+                  },
+                  child: const Icon(Icons.add_circle)),
+            ))),
         body: ListView(children: [
           table(context),
         ]));
@@ -82,7 +64,7 @@ class _IntakeState extends State<Intake> {
               Text("Total ${type.name}",
                   style: const TextStyle(fontWeight: FontWeight.bold)),
             ),
-            DataCell(Text(widget.model.sumBySolvent(type).toString())),
+            DataCell(Text(widget.model.sumBy(type).toString())),
           ])
       ],
     );
@@ -133,8 +115,9 @@ class _IntakeState extends State<Intake> {
                     const TextTheme(titleMedium: TextStyle(fontSize: 14))),
             child: DropdownSearch<SolutionModel>(
               popupProps: const PopupProps.menu(
-                showSearchBox: true,
-              ),
+                  showSearchBox: true,
+                  searchFieldProps:
+                      TextFieldProps(autofillHints: ['Search...'])),
               selectedItem: data.getSolution(),
               itemAsString: (item) {
                 return item.name();

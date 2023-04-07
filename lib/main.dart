@@ -50,7 +50,7 @@ class _MainAppState extends State<MainApp> {
         appBarElevation: 2,
       ),
       // Use the above dark or light theme based on active themeMode.
-      themeMode: ThemeMode.light,
+      themeMode: ThemeMode.dark,
 
       // theme: ThemeData(
       //   useMaterial3: true,

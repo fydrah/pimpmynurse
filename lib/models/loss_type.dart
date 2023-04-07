@@ -26,6 +26,10 @@ class LossTypeModel extends HiveObject {
     save();
   }
 
+  bool isUsed() {
+    return AppBoxes.losses.values.any((e) => e.getLossType() == this);
+  }
+
   @override
   String toString() {
     return '$id:$name';

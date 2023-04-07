@@ -2,7 +2,6 @@ import 'package:hive/hive.dart';
 import 'package:pimpmynurse/models/loss.dart';
 import 'package:pimpmynurse/models/loss_type.dart';
 import 'package:pimpmynurse/models/total.dart';
-import 'package:pimpmynurse/models/medication.dart';
 import 'package:pimpmynurse/utils/boxes.dart';
 import 'package:uuid/uuid.dart';
 part 'output.g.dart';
@@ -32,6 +31,20 @@ class OutputModel extends HiveObject {
     return newOutput;
   }
 
+  factory OutputModel.copy(OutputModel output, {int? hour}) {
+    var newOutput = OutputModel(
+        id: const Uuid().v1(),
+        hour: hour ?? output.hour,
+        losses: HiveList(AppBoxes.losses));
+
+    AppBoxes.outputs.put(newOutput.id, newOutput);
+    for (var loss in output.losses) {
+      newOutput.addLoss(LossModel.create(
+          lossType: loss.getLossType(), quantityMl: loss.quantityMl));
+    }
+    return newOutput;
+  }
+
   String hourName() => '${hour}h';
 
   void addLoss(LossModel loss) {
@@ -49,9 +62,15 @@ class OutputModel extends HiveObject {
     return losses.map((loss) => loss.getLossType()).toSet();
   }
 
-  int sumByLossType(LossTypeModel lossType) {
+  int sumBy(LossTypeModel lossType) {
     return losses
         .where((loss) => loss.getLossType() == lossType)
+        .map((loss) => loss.quantityMl)
+        .fold<int>(0, (prev, next) => prev + next);
+  }
+
+  int sumAll() {
+    return losses
         .map((loss) => loss.quantityMl)
         .fold<int>(0, (prev, next) => prev + next);
   }

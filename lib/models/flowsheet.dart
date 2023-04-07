@@ -55,15 +55,20 @@ class FlowsheetModel extends HiveObject {
     }
 
     var newFlowsheet = FlowsheetModel(
-        id: const Uuid().v1(),
-        name: name,
-        shift: shift,
-        shiftStartingHour: shiftStartingHour,
-        createdAt: DateTime.now(),
-        intakes: HiveList(AppBoxes.intakes),
-        outputs: HiveList(AppBoxes.outputs));
+      id: const Uuid().v1(),
+      name: name,
+      shift: shift,
+      shiftStartingHour: shiftStartingHour,
+      createdAt: DateTime.now(),
+      intakes: HiveList(AppBoxes.intakes),
+      outputs: HiveList(AppBoxes.outputs),
+    );
     AppBoxes.flowsheets.put(newFlowsheet.id, newFlowsheet);
     return newFlowsheet;
+  }
+
+  int entries() {
+    return intakes.length >= outputs.length ? intakes.length : outputs.length;
   }
 
   void newIntake() {

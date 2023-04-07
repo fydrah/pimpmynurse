@@ -52,6 +52,10 @@ class SolutionModel extends HiveObject {
 
   bool hasMedication() => medication != null;
 
+  bool isUsed() {
+    return AppBoxes.medications.values.any((e) => e.getSolution() == this);
+  }
+
   String name() => medication ?? getSolvent().name;
 
   @override

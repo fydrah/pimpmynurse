@@ -26,8 +26,7 @@ class _SettingsState extends State<Settings> {
                 borderRadius: BorderRadius.circular(15),
               ),
               title: const Text('Solutions (Medications and Solvents)'),
-              subtitle:
-                  const Text('Configure available medications on the app'),
+              subtitle: const Text('Configure available medications'),
               tileColor: Theme.of(context).listTileTheme.tileColor,
               trailing: const Icon(Icons.keyboard_arrow_right),
               onTap: () {
@@ -48,8 +47,8 @@ class _SettingsState extends State<Settings> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15),
               ),
-              title: const Text('Loss'),
-              subtitle: const Text('Configure loss'),
+              title: const Text('Loss types'),
+              subtitle: const Text('Configure available loss types'),
               tileColor: Theme.of(context).listTileTheme.tileColor,
               trailing: const Icon(Icons.keyboard_arrow_right),
               onTap: () {
@@ -119,28 +118,36 @@ class _SettingsSolutionsState extends State<SettingsSolutions> {
                     ),
                     trailing: IconButton(
                       icon: const Icon(Icons.delete),
-                      onPressed: () async {
-                        bool validated = await showDialog(
-                            context: context,
-                            builder: (BuildContext context) => AlertDialog(
-                                  title: const Text('Confirm deletion?'),
-                                  actions: [
-                                    ElevatedButton(
-                                        onPressed: () =>
-                                            Navigator.pop(context, false),
-                                        child: const Text('Cancel')),
-                                    ElevatedButton(
-                                        onPressed: () =>
-                                            Navigator.pop(context, true),
-                                        child: const Text('Yes')),
-                                  ],
-                                ));
-                        if (validated) {
-                          setState(() {
-                            solution.delete();
-                          });
-                        }
-                      },
+                      onPressed: solution.isUsed()
+                          ? () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                          'Currently used by a flowsheet, cannot be removed.')));
+                            }
+                          : () async {
+                              bool validated = await showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      AlertDialog(
+                                        title: const Text('Confirm deletion?'),
+                                        actions: [
+                                          ElevatedButton(
+                                              onPressed: () =>
+                                                  Navigator.pop(context, false),
+                                              child: const Text('Cancel')),
+                                          ElevatedButton(
+                                              onPressed: () =>
+                                                  Navigator.pop(context, true),
+                                              child: const Text('Yes')),
+                                        ],
+                                      ));
+                              if (validated) {
+                                setState(() {
+                                  solution.delete();
+                                });
+                              }
+                            },
                     ),
                   ),
               ],
@@ -265,28 +272,36 @@ class _SettingsLossState extends State<SettingsLoss> {
                     ),
                     trailing: IconButton(
                       icon: const Icon(Icons.delete),
-                      onPressed: () async {
-                        bool validated = await showDialog(
-                            context: context,
-                            builder: (BuildContext context) => AlertDialog(
-                                  title: const Text('Confirm deletion?'),
-                                  actions: [
-                                    ElevatedButton(
-                                        onPressed: () =>
-                                            Navigator.pop(context, false),
-                                        child: const Text('Cancel')),
-                                    ElevatedButton(
-                                        onPressed: () =>
-                                            Navigator.pop(context, true),
-                                        child: const Text('Yes')),
-                                  ],
-                                ));
-                        if (validated) {
-                          setState(() {
-                            lossType.delete();
-                          });
-                        }
-                      },
+                      onPressed: lossType.isUsed()
+                          ? () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                          'Currently used by a flowsheet, cannot be removed.')));
+                            }
+                          : () async {
+                              bool validated = await showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      AlertDialog(
+                                        title: const Text('Confirm deletion?'),
+                                        actions: [
+                                          ElevatedButton(
+                                              onPressed: () =>
+                                                  Navigator.pop(context, false),
+                                              child: const Text('Cancel')),
+                                          ElevatedButton(
+                                              onPressed: () =>
+                                                  Navigator.pop(context, true),
+                                              child: const Text('Yes')),
+                                        ],
+                                      ));
+                              if (validated) {
+                                setState(() {
+                                  lossType.delete();
+                                });
+                              }
+                            },
                     )),
               ),
             ),
