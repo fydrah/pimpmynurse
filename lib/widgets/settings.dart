@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pimpmynurse/models/loss_type.dart';
 import 'package:pimpmynurse/models/solution.dart';
 import 'package:pimpmynurse/utils/boxes.dart';
+import 'package:pimpmynurse/widgets/app_bar.dart';
 
 class Settings extends StatefulWidget {
   const Settings({super.key});
@@ -13,56 +14,59 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Card(
-            child: ListTile(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
+    return Scaffold(
+      appBar: FlowsheetAppBar.appBar(context, title: 'Settings'),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Card(
+              child: ListTile(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                title: const Text('Solutions (Medications and Solvents)'),
+                subtitle: const Text('Configure available medications'),
+                tileColor: Theme.of(context).listTileTheme.tileColor,
+                trailing: const Icon(Icons.keyboard_arrow_right),
+                onTap: () {
+                  setState(() {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => const SettingsSolutions()),
+                    );
+                  });
+                },
               ),
-              title: const Text('Solutions (Medications and Solvents)'),
-              subtitle: const Text('Configure available medications'),
-              tileColor: Theme.of(context).listTileTheme.tileColor,
-              trailing: const Icon(Icons.keyboard_arrow_right),
-              onTap: () {
-                setState(() {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (context) => const SettingsSolutions()),
-                  );
-                });
-              },
             ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Card(
-            child: ListTile(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Card(
+              child: ListTile(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                title: const Text('Loss types'),
+                subtitle: const Text('Configure available loss types'),
+                tileColor: Theme.of(context).listTileTheme.tileColor,
+                trailing: const Icon(Icons.keyboard_arrow_right),
+                onTap: () {
+                  setState(() {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => const SettingsLoss()),
+                    );
+                  });
+                },
               ),
-              title: const Text('Loss types'),
-              subtitle: const Text('Configure available loss types'),
-              tileColor: Theme.of(context).listTileTheme.tileColor,
-              trailing: const Icon(Icons.keyboard_arrow_right),
-              onTap: () {
-                setState(() {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (context) => const SettingsLoss()),
-                  );
-                });
-              },
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

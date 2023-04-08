@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pimpmynurse/screens/flowsheet_home.dart';
+import 'package:pimpmynurse/widgets/flowsheet_list.dart';
 import 'package:pimpmynurse/widgets/welcome.dart';
 
 class Home extends StatefulWidget {
@@ -12,7 +12,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   late Widget _current = homePageContent();
   final List<Map<String, dynamic>> _pimps = [
-    {"name": "Flowsheet", "page": const FlowsheetHome()},
+    {"name": "Flowsheet", "page": const FlowsheetList()},
   ];
   @override
   Widget build(BuildContext context) {
