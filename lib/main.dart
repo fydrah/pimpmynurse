@@ -3,8 +3,9 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:pimpmynurse/screens/home.dart';
 import 'package:pimpmynurse/utils/boxes.dart';
 import 'package:pimpmynurse/utils/kv_store.dart';
-import 'package:pimpmynurse/utils/init_data.dart';
+import 'package:pimpmynurse/utils/flowsheet/init_flowsheet_data.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
+import 'package:pimpmynurse/utils/theme_mode_setting.dart';
 
 void main() async {
   await Hive.initFlutter();
@@ -28,7 +29,7 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
-  ThemeMode themeMode = ThemeMode.system;
+  ThemeMode themeMode = ThemeModeSetting.get();
 
   @override
   Widget build(BuildContext context) {
@@ -50,31 +51,15 @@ class _MainAppState extends State<MainApp> {
         appBarElevation: 2,
       ),
       // Use the above dark or light theme based on active themeMode.
-      themeMode: ThemeMode.dark,
+      themeMode: themeMode,
 
-      // theme: ThemeData(
-      //   useMaterial3: true,
-      //   colorScheme: ColorScheme.fromSwatch(
-      //       primarySwatch: Colors.teal,
-      //       backgroundColor:
-      //           ColorSwatch.lerp(Colors.tealAccent, Colors.blueGrey, 0.9),
-      //       accentColor: Colors.blueGrey),
-      //   listTileTheme: ListTileThemeData(
-      //     tileColor: Colors.blueGrey.shade200,
-      //     textColor: Colors.black87,
-      //   ),
-      //   dataTableTheme: DataTableThemeData(
-      //     headingRowColor: MaterialStateColor.resolveWith(
-      //         (states) => Colors.blueGrey.shade200),
-      //   ),
-      //   appBarTheme: const AppBarTheme(
-      //     color: Colors.cyan,
-      //   ),
-
-      //   primarySwatch: Colors.blueGrey,
-      // ),
-
-      home: const Home(),
+      home: Home(
+        onThemeModeChanged: (ThemeMode value) {
+          setState(() {
+            themeMode = value;
+          });
+        },
+      ),
     );
   }
 }

@@ -1,7 +1,6 @@
 import 'package:hive/hive.dart';
 import 'package:pimpmynurse/models/loss.dart';
 import 'package:pimpmynurse/models/loss_type.dart';
-import 'package:pimpmynurse/models/total.dart';
 import 'package:pimpmynurse/utils/boxes.dart';
 import 'package:uuid/uuid.dart';
 part 'output.g.dart';
@@ -20,9 +19,6 @@ class OutputModel extends HiveObject {
   final int hour;
   @HiveField(2)
   HiveList<LossModel> losses;
-
-  late TotalModel total;
-  late TotalModel totalCum;
 
   factory OutputModel.create({required int hour}) {
     var newOutput = OutputModel(

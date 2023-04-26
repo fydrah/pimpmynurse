@@ -1,6 +1,5 @@
 import 'package:hive/hive.dart';
 import 'package:pimpmynurse/models/solvent.dart';
-import 'package:pimpmynurse/models/total.dart';
 import 'package:pimpmynurse/models/medication.dart';
 import 'package:pimpmynurse/utils/boxes.dart';
 import 'package:uuid/uuid.dart';
@@ -20,11 +19,6 @@ class IntakeModel extends HiveObject {
   final int hour;
   @HiveField(2)
   HiveList<MedicationModel> medications;
-
-  late TotalModel totalPO;
-  late TotalModel totalCumPO;
-  late TotalModel totalIV;
-  late TotalModel totalCumIV;
 
   factory IntakeModel.create({required int hour}) {
     var newIntake = IntakeModel(

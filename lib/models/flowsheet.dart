@@ -1,6 +1,8 @@
 import 'package:hive/hive.dart';
+import 'package:pimpmynurse/models/loss_type.dart';
 import 'package:pimpmynurse/models/output.dart';
 import 'package:pimpmynurse/models/intake.dart';
+import 'package:pimpmynurse/models/solvent.dart';
 import 'package:pimpmynurse/utils/boxes.dart';
 import 'package:pimpmynurse/models/shift.dart';
 import 'package:uuid/uuid.dart';
@@ -105,6 +107,42 @@ class FlowsheetModel extends HiveObject {
   void removeOutput(OutputModel output) {
     outputs.remove(output);
     save();
+  }
+
+  Set<SolventModel> getSolventsUntil(IntakeModel intake) {
+    Set<SolventModel> solvents = {};
+    intakes.sublist(0, intakes.indexOf(intake) + 1).forEach((element) {
+      solvents.addAll(element.getSolvents());
+    });
+    return solvents;
+  }
+
+  Set<LossTypeModel> getLossTypesUntil(OutputModel output) {
+    Set<LossTypeModel> lossTypes = {};
+    outputs.sublist(0, outputs.indexOf(output) + 1).forEach((element) {
+      lossTypes.addAll(element.getLossTypes());
+    });
+    return lossTypes;
+  }
+
+  int intakeCumSumAll(IntakeModel intake) {
+    return intakes.sublist(0, intakes.indexOf(intake) + 1).fold<int>(
+        0, (previousValue, element) => previousValue + element.sumAll());
+  }
+
+  int intakeCumSumBy(IntakeModel intake, SolventModel solvent) {
+    return intakes.sublist(0, intakes.indexOf(intake) + 1).fold<int>(
+        0, (previousValue, element) => previousValue + element.sumBy(solvent));
+  }
+
+  int outputCumSumAll(OutputModel output) {
+    return outputs.sublist(0, outputs.indexOf(output) + 1).fold<int>(
+        0, (previousValue, element) => previousValue + element.sumAll());
+  }
+
+  int outputCumSumBy(OutputModel output, LossTypeModel lossType) {
+    return outputs.sublist(0, outputs.indexOf(output) + 1).fold<int>(
+        0, (previousValue, element) => previousValue + element.sumBy(lossType));
   }
 
   @override

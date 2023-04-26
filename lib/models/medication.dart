@@ -38,7 +38,6 @@ class MedicationModel extends HiveObject {
   void setSolution(SolutionModel solution) {
     solutionId = solution.id;
     save();
-    print(solution.toString());
   }
 
   void setQt(int quantityMl) {
