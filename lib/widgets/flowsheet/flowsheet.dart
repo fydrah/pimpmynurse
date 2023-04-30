@@ -15,7 +15,7 @@ class Flowsheet extends StatefulWidget {
 }
 
 class _FlowsheetState extends State<Flowsheet> {
-  static const int _maxEntries = 12;
+  static const int _maxEntries = 8;
 
   newIntake() {
     setState(() {
@@ -52,76 +52,52 @@ class _FlowsheetState extends State<Flowsheet> {
                       margin: const EdgeInsets.symmetric(
                           horizontal: 10.0, vertical: 6.0),
                       child: TextButton(
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text('${widget.model.intakes[i].hour}h'),
-                              const Icon(Icons.access_time_filled)
-                            ]),
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => Entry(
-                                  title:
-                                      '${widget.model.name} | ${widget.model.shiftStartingHour + i}h',
-                                  flowsheet: widget.model,
-                                  intake: widget.model.intakes[i],
-                                  output: widget.model.outputs[i])));
-                        },
-                        onLongPress: () async {
-                          String? validated = await showDialog(
-                              context: context,
-                              builder: (BuildContext context) => AlertDialog(
-                                    title: Text(
-                                        '${widget.model.shiftStartingHour + i}h'),
-                                    content: const Text(
-                                        'Remove or duplicate entry.'),
-                                    actionsAlignment: MainAxisAlignment.center,
-                                    actions: [
-                                      ElevatedButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context, 'cancel'),
-                                          child: const Text('Cancel')),
-                                      const VerticalDivider(),
-                                      ElevatedButton(
-                                          onPressed: () {
-                                            if (i !=
-                                                widget.model.entries() - 1) {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(const SnackBar(
-                                                      content: Text(
-                                                          'Only the latest entry can be removed.')));
-                                            } else {
-                                              Navigator.pop(context, 'delete');
-                                            }
-                                          },
-                                          child: const Icon(Icons.delete)),
-                                      ElevatedButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context, 'copy'),
-                                          child: const Icon(Icons.copy)),
-                                    ],
-                                  ));
-                          switch (validated) {
-                            case 'delete':
-                              setState(() {
-                                widget.model.intakes[i].delete();
-                                widget.model.outputs[i].delete();
-                              });
-                              break;
-                            case 'copy':
-                              setState(() {
-                                widget.model.addIntake(IntakeModel.copy(
-                                    widget.model.intakes[i],
-                                    hour: widget.model.intakes[i].hour + 1));
-                                widget.model.addOutput(OutputModel.copy(
-                                    widget.model.outputs[i],
-                                    hour: widget.model.outputs[i].hour + 1));
-                              });
-                              break;
-                            default:
-                          }
-                        },
-                      )),
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('${widget.model.intakes[i].hour}h'),
+                                const Icon(Icons.access_time_filled)
+                              ]),
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => Entry(
+                                    title:
+                                        '${widget.model.name} | ${widget.model.shiftStartingHour + i}h',
+                                    flowsheet: widget.model,
+                                    intake: widget.model.intakes[i],
+                                    output: widget.model.outputs[i])));
+                          },
+                          onLongPress: () async {
+                            if (i != widget.model.entries() - 1) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                          'Only the latest entry can be removed.')));
+                            } else {
+                              bool? validated = await showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      AlertDialog(
+                                        title: const Text('Confirm deletion?'),
+                                        actions: [
+                                          ElevatedButton(
+                                              onPressed: () =>
+                                                  Navigator.pop(context, false),
+                                              child: const Text('Cancel')),
+                                          ElevatedButton(
+                                              onPressed: () =>
+                                                  Navigator.pop(context, true),
+                                              child: const Text('Yes')),
+                                        ],
+                                      ));
+                              if (validated != null && validated) {
+                                setState(() {
+                                  widget.model.intakes[i].delete();
+                                  widget.model.outputs[i].delete();
+                                });
+                              }
+                            }
+                          })),
                 Card(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
@@ -131,17 +107,63 @@ class _FlowsheetState extends State<Flowsheet> {
                         horizontal: 10.0, vertical: 10.0),
                     child: IconButton(
                         icon: const Icon(Icons.add),
-                        onPressed: () {
-                          if (widget.model.entries() < _maxEntries) {
-                            newIntake();
-                            newOutput();
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text(
-                                        'Cannot create more than $_maxEntries entries.')));
-                          }
-                        })),
+                        onPressed: widget.model.entries() < _maxEntries
+                            ? () async {
+                                String? validated = await showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        AlertDialog(
+                                          title: const Text('New entry'),
+                                          content: const Text(
+                                              'Duplicate last entry or create an empty one.'),
+                                          actionsAlignment:
+                                              MainAxisAlignment.center,
+                                          actions: [
+                                            ElevatedButton(
+                                                onPressed: () => Navigator.pop(
+                                                    context, 'cancel'),
+                                                child: const Text('Cancel')),
+                                            const VerticalDivider(),
+                                            ElevatedButton(
+                                              onPressed:
+                                                  widget.model.entries() > 0
+                                                      ? () => Navigator.pop(
+                                                          context, 'copy')
+                                                      : null,
+                                              child: const Icon(Icons.copy),
+                                            ),
+                                            ElevatedButton(
+                                                onPressed: () => Navigator.pop(
+                                                    context, 'new'),
+                                                child: const Icon(Icons.add)),
+                                          ],
+                                        ));
+                                switch (validated) {
+                                  case 'new':
+                                    newIntake();
+                                    newOutput();
+                                    break;
+                                  case 'copy':
+                                    setState(() {
+                                      widget.model.addIntake(IntakeModel.copy(
+                                          widget.model.intakes.last,
+                                          hour: widget.model.intakes.last.hour +
+                                              1));
+                                      widget.model.addOutput(OutputModel.copy(
+                                          widget.model.outputs.last,
+                                          hour: widget.model.outputs.last.hour +
+                                              1));
+                                    });
+                                    break;
+                                  default:
+                                }
+                              }
+                            : () {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text(
+                                            'Cannot create more than $_maxEntries entries.')));
+                              })),
               ],
             ),
           ),

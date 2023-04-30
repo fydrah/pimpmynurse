@@ -13,12 +13,18 @@ const List<String> _defaultSolvents = [
   'FEEDS',
   'LIPID',
   'RL',
+  'TPN',
+  'PRBC',
+  'FFP',
+  'PLT',
+  'Cryo',
+  'Other',
 ];
 
 const Map<String, String> _defaultSolutions = {
   'Amiodarone': 'D5W',
   'Calcium Chloride': 'D5W',
-  'Hydromorphome': 'NS',
+  'Hydromorphone': 'NS',
   'Lorazepam': 'NS',
   'Magnesium Sulfate': 'D5W',
   'Norepinephrine': 'D5W',
@@ -31,6 +37,7 @@ const List<String> _defaultLossTypes = [
   'AFR',
   'CT',
   'JP',
+  'Mediastinal Tube',
   'NG/OG',
   'Other',
   'Pigtail',

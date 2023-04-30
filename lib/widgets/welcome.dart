@@ -4,16 +4,15 @@ import 'package:pimpmynurse/utils/kv_store.dart';
 class Welcome {
   static void welcome(context) {
     String welcomed = 'welcomed';
-    String version = 'v0.0.1';
-    if (KVStore.localStorage.getBool('${welcomed}_$version') == null ||
-        !KVStore.localStorage.getBool('${welcomed}_$version')!) {
+    if (KVStore.localStorage.getBool(welcomed) == null ||
+        !KVStore.localStorage.getBool(welcomed)!) {
       showDialog(
           context: context,
           builder: (BuildContext context) => AlertDialog(
                 insetPadding:
                     const EdgeInsets.symmetric(horizontal: 1.0, vertical: 25.0),
                 contentPadding:
-                    EdgeInsets.only(left: 25.0, right: 25.0, top: 25.0),
+                    const EdgeInsets.only(left: 25.0, right: 25.0, top: 25.0),
                 title: const Center(child: Text('Welcome')),
                 content: const RawScrollbar(
                   thumbVisibility: true,
@@ -53,7 +52,7 @@ Copyright (C) 2023 @fydrah
                       child: const Text('Close')),
                 ],
               )).then((_) {
-        KVStore.localStorage.setBool('${welcomed}_$version', true);
+        KVStore.localStorage.setBool(welcomed, true);
       });
     }
   }

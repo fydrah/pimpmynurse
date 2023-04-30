@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pimpmynurse/models/flowsheet.dart';
 import 'package:pimpmynurse/models/intake.dart';
+import 'package:pimpmynurse/models/loss_type.dart';
 import 'package:pimpmynurse/models/output.dart';
+import 'package:pimpmynurse/models/solvent.dart';
+import 'package:pimpmynurse/utils/boxes.dart';
 
 class Total extends StatelessWidget {
   final FlowsheetModel flowsheet;
@@ -51,11 +54,11 @@ class TotalValue extends StatelessWidget {
     return Card(
       child: ListTile(
         title: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Text('${intake.sumAll() - output.sumAll()} ml',
+          Text('Net: ${intake.sumAll() - output.sumAll()} ml',
               style: const TextStyle(fontSize: 16)),
           const VerticalDivider(),
           Text(
-              '(Cum: ${flowsheet.intakeCumSumAll(intake) - flowsheet.outputCumSumAll(output)} ml)',
+              '(Cum.: ${flowsheet.intakeCumSumAll(intake) - flowsheet.outputCumSumAll(output)} ml)',
               style: const TextStyle(fontSize: 16)),
         ]),
       ),
@@ -127,6 +130,58 @@ class TotalTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<DataRow> rows = [
+      for (var flowType in iterator)
+        DataRow(cells: <DataCell>[
+          DataCell(
+            Text("${flowType.name}"),
+          ),
+          DataCell(Text(data.sumBy(flowType).toString())),
+          DataCell(Text(_cumSumBy(flowType).toString())),
+        ]),
+    ];
+    List<DataRow> totalRows = [
+      DataRow(cells: <DataCell>[
+        const DataCell(
+          Text("Total", style: TextStyle(fontWeight: FontWeight.bold)),
+        ),
+        DataCell(Text(data.sumAll().toString())),
+        DataCell(Text(_cumSumAll().toString())),
+      ])
+    ];
+
+    if (type == 'intake') {
+      SolventModel h2o = AppBoxes.solvents.values
+          .firstWhere((element) => element.name == 'H₂O');
+      SolventModel feeds = AppBoxes.solvents.values
+          .firstWhere((element) => element.name == 'FEEDS');
+      if (iterator.contains(h2o) && iterator.contains(feeds)) {
+        rows.add(DataRow(cells: <DataCell>[
+          const DataCell(
+            Text("H₂O + FEEDS", style: TextStyle(fontWeight: FontWeight.bold)),
+          ),
+          DataCell(Text((data.sumBy(h2o) + data.sumBy(feeds)).toString())),
+          DataCell(Text((_cumSumBy(h2o) + _cumSumBy(feeds)).toString())),
+        ]));
+      }
+    }
+
+    if (type == 'output') {
+      LossTypeModel afr = AppBoxes.lossTypes.values
+          .firstWhere((element) => element.name == 'AFR');
+      if (iterator.contains(afr)) {
+        rows.add(DataRow(cells: <DataCell>[
+          const DataCell(
+            Text("Total (w/o AFR)",
+                style: TextStyle(fontWeight: FontWeight.bold)),
+          ),
+          DataCell(Text((data.sumAll() - data.sumBy(afr)).toString())),
+          DataCell(Text((_cumSumAll() - _cumSumBy(afr)).toString())),
+        ]));
+      }
+    }
+
+    rows.addAll(totalRows);
     return DataTable(
         headingRowColor: Theme.of(context).dataTableTheme.headingRowColor,
         dataRowColor: Theme.of(context).dataTableTheme.dataRowColor,
@@ -139,29 +194,13 @@ class TotalTable extends StatelessWidget {
                   style: const TextStyle(fontWeight: FontWeight.bold))),
           const DataColumn(
               numeric: true,
-              label: Text('Qt (ml)',
+              label: Text('Net (ml)',
                   style: TextStyle(fontWeight: FontWeight.bold))),
           const DataColumn(
               numeric: true,
-              label: Text('Cum. Qt (ml)',
+              label: Text('Cum. (ml)',
                   style: TextStyle(fontWeight: FontWeight.bold))),
         ],
-        rows: [
-          for (var flowType in iterator)
-            DataRow(cells: <DataCell>[
-              DataCell(
-                Text("${flowType.name}"),
-              ),
-              DataCell(Text(data.sumBy(flowType).toString())),
-              DataCell(Text(_cumSumBy(flowType).toString())),
-            ]),
-          DataRow(cells: <DataCell>[
-            const DataCell(
-              Text("Total", style: TextStyle(fontWeight: FontWeight.bold)),
-            ),
-            DataCell(Text(data.sumAll().toString())),
-            DataCell(Text(_cumSumAll().toString())),
-          ]),
-        ]);
+        rows: rows);
   }
 }
