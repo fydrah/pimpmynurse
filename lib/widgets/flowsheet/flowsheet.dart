@@ -162,7 +162,7 @@ class _FlowsheetState extends State<Flowsheet> {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                         content: Text(
-                                            'Cannot create more than $_maxEntries entries.')));
+                                            'You must create a new flowsheet after $_maxEntries entries.')));
                               })),
               ],
             ),
