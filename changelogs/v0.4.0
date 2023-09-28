@@ -1,0 +1,3 @@
+* Add Albumin solvent
+* Fix a bug which prevented to remove solutions/losses even if not in use
+* Add app reset

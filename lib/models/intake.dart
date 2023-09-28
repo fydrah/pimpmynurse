@@ -78,7 +78,9 @@ class IntakeModel extends HiveObject {
 
   @override
   Future<void> delete() {
-    medications.deleteAllFromHive();
+    for (var medication in medications) {
+      medication.delete();
+    }
     return super.delete();
   }
 }

@@ -73,7 +73,9 @@ class OutputModel extends HiveObject {
 
   @override
   Future<void> delete() {
-    losses.deleteAllFromHive();
+    for (var loss in losses) {
+      loss.delete();
+    }
     return super.delete();
   }
 }
