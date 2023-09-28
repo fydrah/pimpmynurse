@@ -57,4 +57,17 @@ class AppBoxes {
     Hive.registerAdapter(LossTypeModelAdapter());
     Hive.registerAdapter(ShiftAdapter());
   }
+
+  static Future clearBoxes() {
+    return Future.wait([
+      flowsheets.clear(),
+      intakes.clear(),
+      medications.clear(),
+      solutions.clear(),
+      solvents.clear(),
+      outputs.clear(),
+      losses.clear(),
+      lossTypes.clear(),
+    ]);
+  }
 }

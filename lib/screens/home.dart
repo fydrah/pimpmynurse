@@ -69,7 +69,7 @@ class _HomeState extends State<Home> {
                         children: [
                           Text(_pimps[index]['name']),
                           Divider(
-                              color: Theme.of(context).colorScheme.background),
+                              color: Theme.of(context).colorScheme.surface),
                           const Icon(Icons.gas_meter_sharp),
                         ],
                       ),

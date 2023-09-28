@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pimpmynurse/models/solution.dart';
 import 'package:pimpmynurse/utils/boxes.dart';
+import 'package:basic_utils/basic_utils.dart';
 
 class SettingsSolutions extends StatefulWidget {
   const SettingsSolutions({super.key});
@@ -39,7 +40,7 @@ class _SettingsSolutionsState extends State<SettingsSolutions> {
                       child: const Icon(Icons.add)),
                 ),
                 for (var solution in AppBoxes.solutions.values.where(
-                    (e) => e.getSolvent() == solvent && e.hasMedication()))
+                    (e) => e.getSolvent() == solvent && e.hasMedication()).toList()..sort(((a, b) => a.name().compareTo(b.name()))))
                   ListTile(
                     title: Text(solution.name()),
                     leading: IconButton(
@@ -143,7 +144,7 @@ class _SettingsSolutionsState extends State<SettingsSolutions> {
                                   onPressed: () =>
                                       formKey.currentState!.validate()
                                           ? Navigator.pop(
-                                              context, textEditController.text)
+                                              context, StringUtils.capitalize(textEditController.text))
                                           : null,
                                   child: existingSolution == null
                                       ? const Icon(Icons.add_circle)

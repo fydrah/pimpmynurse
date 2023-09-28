@@ -147,8 +147,12 @@ class FlowsheetModel extends HiveObject {
 
   @override
   Future<void> delete() {
-    intakes.deleteAllFromHive();
-    outputs.deleteAllFromHive();
+    for (var intake in intakes) {
+      intake.delete();
+    }
+    for (var output in outputs) {
+      output.delete();
+    }
     return super.delete();
   }
 }
