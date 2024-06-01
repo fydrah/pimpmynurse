@@ -34,7 +34,7 @@ class _SettingsLossTypesState extends State<SettingsLossTypes> {
                   child: const Icon(Icons.add)),
             ),
           ),
-          for (var lossType in AppBoxes.lossTypes.values)
+          for (var lossType in AppBoxes.lossTypes.values.toList()..sort(((a, b) => a.name.compareTo(b.name))))
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Card(

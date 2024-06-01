@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pimpmynurse/utils/flowsheet/app_bar.dart';
 import 'package:pimpmynurse/widgets/flowsheet/setting_flowsheet_limit.dart';
+import 'package:pimpmynurse/widgets/flowsheet/setting_export.dart';
+import 'package:pimpmynurse/widgets/flowsheet/setting_import.dart';
+import 'package:pimpmynurse/widgets/flowsheet/setting_reset.dart';
 import 'package:pimpmynurse/widgets/flowsheet/settings_loss_types.dart';
 import 'package:pimpmynurse/widgets/flowsheet/settings_solutions.dart';
 
@@ -31,6 +34,9 @@ class _SettingsState extends State<Settings> {
               subtitle: 'Configure available loss types',
               leading: ImageIcon(AssetImage('assets/nephrology.png'))),
           SettingFlowsheetLimit(),
+          SettingImport(),
+          SettingExport(),
+          SettingReset(),
         ],
       ),
     );

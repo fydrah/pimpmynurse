@@ -1,0 +1,32 @@
+name: Release
+
+on:
+  push:
+    tags:        
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Flutter SDK
+        uses: flutter-actions/setup-flutter@v3
+        with:
+          channel: stable
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Prepare
+        run: |
+          flutter pub run flutter_launcher_icons
+          flutter pub run flutter_native_splash:create
+          flutter pub run flutter_app_name
+      - name: Build APK
+        run: flutter build apk --split-per-abi
+      - name: release
+        id: release
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: changelogs/${{ github.ref }}
+          files: build/app/outputs/flutter-apk/*
+          make_latest: true

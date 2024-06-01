@@ -3,6 +3,7 @@ import 'package:pimpmynurse/models/solution.dart';
 import 'package:pimpmynurse/utils/boxes.dart';
 
 const List<String> _defaultSolvents = [
+  'Albumin',
   '1/2NS',
   'NS',
   'D5W',
@@ -17,6 +18,7 @@ const List<String> _defaultSolvents = [
   'PRBC',
   'FFP',
   'PLT',
+  'Plasmalyte',
   'Cryo',
   'Other',
 ];

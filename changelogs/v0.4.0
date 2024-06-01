@@ -1,0 +1,7 @@
+* Add Albumin and Plasmalyte solvents
+* Fix a bug which prevented to remove solutions/losses even if not in use
+* Add app reset
+* Add description on medications/solvents dropdown
+* Capitalize solvents and losses
+* Order solvents and losses by name in settings
+* Update archive package for security update

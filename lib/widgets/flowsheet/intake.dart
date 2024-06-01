@@ -22,20 +22,20 @@ class _IntakeState extends State<Intake> {
         bottomNavigationBar: bottomBar(context),
         body: Column(
           children: [
-            Card(
+            const Card(
               margin:
-                  const EdgeInsets.symmetric(vertical: 1.0, horizontal: 1.0),
+                  EdgeInsets.symmetric(vertical: 1.0, horizontal: 1.0),
               child: ListTile(
                 minLeadingWidth: 20,
-                leading: const SizedBox(width: 20),
-                title: const SizedBox(
+                leading: SizedBox(width: 20),
+                title: SizedBox(
                   width: 120,
                   child: Text('Medication',
                       style: TextStyle(fontWeight: FontWeight.bold)),
                 ),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: const [
+                  children: [
                     SizedBox(
                         width: 60,
                         child: Text('Qt (ml)',
@@ -189,7 +189,11 @@ class _IntakeState extends State<Intake> {
           ),
           selectedItem: data.getSolution(),
           itemAsString: (item) {
-            return item.name();
+            if(item.hasMedication()){
+              return "${item.name()} (${item.getSolvent().name})";
+            } else {
+              return item.name();
+            }
           },
           items: _solutionsByMedicatedAndName(),
           onChanged: (SolutionModel? value) {

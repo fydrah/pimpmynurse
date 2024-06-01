@@ -42,7 +42,7 @@ class _FlowsheetListState extends State<FlowsheetList> {
         padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 6.0),
         child: ElevatedButton(
           style: ButtonStyle(
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
           ))),

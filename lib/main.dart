@@ -15,50 +15,66 @@ void main() async {
 
   await Future.wait(AppBoxes.openBoxes());
 
-  initSolventsAndSolutions();
-  initLossTypes();
-
   runApp(const MainApp());
 }
 
 class MainApp extends StatefulWidget {
   const MainApp({super.key});
 
+  static void restartApp(BuildContext context) {
+    context.findAncestorStateOfType<_MainAppState>()?.restartApp();
+  }
+
   @override
   State<MainApp> createState() => _MainAppState();
 }
 
 class _MainAppState extends State<MainApp> {
+  Key key = UniqueKey();
   ThemeMode themeMode = ThemeModeSetting.get();
+
+  void restartApp() {
+    setState(() {
+      key = UniqueKey();
+      initSolventsAndSolutions();
+      initLossTypes();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     const FlexScheme usedScheme = FlexScheme.bahamaBlue;
 
-    return MaterialApp(
-      title: 'Pimp my nurse',
+    initSolventsAndSolutions();
+    initLossTypes();
 
-      debugShowCheckedModeBanner: false,
-      theme: FlexThemeData.light(
-        scheme: usedScheme,
-        // Use very subtly themed app bar elevation in light mode.
-        appBarElevation: 0.5,
-      ),
-      // Same definition for the dark theme, but using FlexThemeData.dark().
-      darkTheme: FlexThemeData.dark(
-        scheme: usedScheme,
-        // Use a bit more themed elevated app bar in dark mode.
-        appBarElevation: 2,
-      ),
-      // Use the above dark or light theme based on active themeMode.
-      themeMode: themeMode,
+    return KeyedSubtree(
+      key: key,
+      child: MaterialApp(
+        title: 'Pimp my nurse',
 
-      home: Home(
-        onThemeModeChanged: (ThemeMode value) {
-          setState(() {
-            themeMode = value;
-          });
-        },
+        debugShowCheckedModeBanner: false,
+        theme: FlexThemeData.light(
+          scheme: usedScheme,
+          // Use very subtly themed app bar elevation in light mode.
+          appBarElevation: 0.5,
+        ),
+        // Same definition for the dark theme, but using FlexThemeData.dark().
+        darkTheme: FlexThemeData.dark(
+          scheme: usedScheme,
+          // Use a bit more themed elevated app bar in dark mode.
+          appBarElevation: 2,
+        ),
+        // Use the above dark or light theme based on active themeMode.
+        themeMode: themeMode,
+
+        home: Home(
+          onThemeModeChanged: (ThemeMode value) {
+            setState(() {
+              themeMode = value;
+            });
+          },
+        ),
       ),
     );
   }
