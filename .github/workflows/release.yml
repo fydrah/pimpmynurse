@@ -25,6 +25,7 @@ jobs:
       - name: Prepare upload signing
         env:
           JKS_B64:  ${{ secrets.JKS_B64 }}
+          JKS_STORE_FILE: upload-keystore.jks
         run: base64 -d <<< $JKS_B64 > ./android/app/$JKS_STORE_FILE
       - name: Build APK
         env:
