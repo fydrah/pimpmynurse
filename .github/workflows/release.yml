@@ -6,7 +6,7 @@ on:
       - '*'
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -16,14 +16,24 @@ jobs:
           channel: stable
       - name: Install dependencies
         run: flutter pub get
-      - name: Prepare
-        run: |
-          flutter pub run flutter_launcher_icons
-          flutter pub run flutter_native_splash:create
-          flutter pub run flutter_app_name
+      - name: Prepare icons
+        run: flutter pub run flutter_launcher_icons
+      - name: Prepare splash screen
+        run: flutter pub run flutter_native_splash:create
+      - name: Prepare app name
+        run: flutter pub run flutter_app_name
+      - name: Prepare upload signing
+        env:
+          JKS_B64:  ${{ secrets.JKS_B64 }}
+        run: base64 -d <<< $JKS_B64 > ./android/app/$JKS_STORE_FILE
       - name: Build APK
+        env:
+          JKS_KEY_ALIAS: upload
+          JKS_KEY_PASSWORD: ${{ secrets.JKS_KEY_PASSWORD }}
+          JKS_STORE_FILE: upload-keystore.jks
+          JKS_STORE_PASSWORD: ${{ secrets.JKS_STORE_PASSWORD }}
         run: flutter build apk --split-per-abi
-      - name: release
+      - name: Release
         id: release
         uses: softprops/action-gh-release@v2
         with:
