@@ -36,6 +36,6 @@ jobs:
         id: release
         uses: softprops/action-gh-release@v2
         with:
-          body_path: changelogs/${{ github.ref }}
+          body_path: changelogs/${{ github.ref_name }}
           files: build/app/outputs/release/*
           make_latest: true
