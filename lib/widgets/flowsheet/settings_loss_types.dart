@@ -1,3 +1,4 @@
+import 'package:basic_utils/basic_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:pimpmynurse/models/loss_type.dart';
 import 'package:pimpmynurse/utils/boxes.dart';
@@ -140,7 +141,7 @@ class _SettingsLossTypesState extends State<SettingsLossTypes> {
                                 onPressed: () =>
                                     formKey.currentState!.validate()
                                         ? Navigator.pop(
-                                            context, textEditController.text)
+                                            context, StringUtils.capitalize(textEditController.text, allWords: true))
                                         : null,
                                 child: Row(children: [
                                   const Icon(Icons.add_circle),

@@ -144,7 +144,7 @@ class _SettingsSolutionsState extends State<SettingsSolutions> {
                                   onPressed: () =>
                                       formKey.currentState!.validate()
                                           ? Navigator.pop(
-                                              context, StringUtils.capitalize(textEditController.text))
+                                              context, StringUtils.capitalize(textEditController.text, allWords: true))
                                           : null,
                                   child: existingSolution == null
                                       ? const Icon(Icons.add_circle)
