@@ -33,11 +33,11 @@ jobs:
           JKS_KEY_PASSWORD: ${{ secrets.JKS_KEY_PASSWORD }}
           JKS_STORE_FILE: upload-keystore.jks
           JKS_STORE_PASSWORD: ${{ secrets.JKS_STORE_PASSWORD }}
-        run: flutter build apk --split-per-abi
+        run: flutter build bundle
       - name: Release
         id: release
         uses: softprops/action-gh-release@v2
         with:
           body_path: changelogs/${{ github.ref }}
-          files: build/app/outputs/flutter-apk/*
+          files: build/app/outputs/release/*
           make_latest: true

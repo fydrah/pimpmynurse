@@ -177,7 +177,7 @@ class _OutputState extends State<Output> {
           itemAsString: (item) {
             return item.name;
           },
-          items: AppBoxes.lossTypes.values.toList(),
+          items: AppBoxes.lossTypes.values.toList()..sort(((a, b) => a.name.compareTo(b.name))),
           onChanged: (LossTypeModel? value) {
             if (value != null) {
               setState(() {

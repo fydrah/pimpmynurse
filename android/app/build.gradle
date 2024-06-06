@@ -48,14 +48,17 @@ android {
         release {
             keyAlias "$System.env.JKS_KEY_ALIAS"
             keyPassword "$System.env.JKS_KEY_PASSWORD"
-            storeFile file(System.env.JKS_STORE_FILE)
+            storeFile System.env.JKS_STORE_FILE ? file(System.env.JKS_STORE_FILE) : null
             storePassword "$System.env.JKS_STORE_PASSWORD"
+        }
+        debug {
         }
     }
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
+            signingConfig = signingConfigs.release
+        }
+        debug {
             signingConfig = signingConfigs.debug
         }
     }
